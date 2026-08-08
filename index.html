@@ -294,16 +294,16 @@ body.tp-mode-inner .tp-bg__veil{
   font-size:1.45rem;letter-spacing:.26em;text-transform:uppercase;color:var(--tp-text-dim);
   margin-top:1.1rem;
 }
+/* 6 колонок: 3 карточки в первом ряду (по 2 колонки),
+   2 — во втором, по центру. Сетка ~60% ширины экрана. */
 .tp-grid{
   display:grid;grid-template-columns:repeat(6,1fr);gap:2.4rem;
-  width:100%;max-width:100rem;
+  width:60vw;max-width:none;margin-left:auto;margin-right:auto;
 }
 .tp-grid .tp-card{grid-column:span 2}
 .tp-grid .tp-card:nth-child(4){grid-column:2 / span 2}
 @media (orientation:landscape){
-  .tp-grid{grid-template-columns:repeat(5,1fr);max-width:162rem;gap:1.9rem}
-  .tp-grid .tp-card,
-  .tp-grid .tp-card:nth-child(4){grid-column:auto}
+  .tp-grid{gap:1.9rem}
 }
 
 .tp-card{
@@ -332,12 +332,12 @@ body.tp-mode-inner .tp-bg__veil{
 .tp-card:hover::after{opacity:1}
 .tp-card:active{transform:scale(.975)}
 
-.tp-arch{position:relative;width:9.6rem;height:10.8rem;flex:0 0 auto}
+.tp-arch{position:relative;width:8.64rem;height:9.72rem;flex:0 0 auto}
 .tp-arch__frame{position:absolute;inset:0;width:100%;height:100%}
 .tp-arch__frame path{fill:none;stroke:var(--tp-gold);stroke-width:3.4;stroke-linecap:round}
 .tp-arch__ico{
   position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
-  width:4.6rem;height:4.6rem;
+  width:4.14rem;height:4.14rem;
   fill:none;stroke:var(--tp-gold);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
 }
 .tp-card__num{
@@ -363,7 +363,7 @@ body.tp-mode-inner .tp-bg__veil{
 
 @media (min-width: 2500px) {
   html { font-size: clamp(24px, calc(0.65vw + 0.65vh), 42px); }
-  .tp-grid { max-width: 220rem; gap: 3.2rem; }
+  .tp-grid { gap: 3.2rem; }
   .tp-card { min-height: 32rem; padding: 4.5rem 2.5rem; }
   .tp-menu__body { gap: 3.5rem; padding-top: 3rem; }
   .tp-menu__footer { padding-bottom: 3rem; }
@@ -400,17 +400,21 @@ body.tp-mode-inner .tp-bg__veil{
   .tp-splash__mid{transform:translateY(-5vh)!important}
   .tp-head{padding:2.4rem 3rem}
   .tp-menu__body{padding:2.6vh 4vw 2.6vh;gap:2.4vh;justify-content:center;overflow:hidden}
+  /* тот же расклад 3 + 2, но шире: на узком экране 60% нечитаемо */
   .tp-grid{
     display:grid!important;
-    grid-template-columns:repeat(2,1fr);
-    gap:2.2vh 3vw;
-    width:100%;max-width:none;align-items:stretch;
+    grid-template-columns:repeat(6,1fr);
+    gap:2.2vh 2vw;
+    width:88vw;max-width:none;align-items:stretch;
   }
-  .tp-grid .tp-card{grid-column:span 1!important;width:auto;height:100%;min-height:0;max-height:23vh}
-  /* пятая карточка — во всю ширину */
-  .tp-grid .tp-card:nth-child(5){grid-column:1 / -1!important;min-height:0;max-height:17vh}
-  .tp-card__title{font-size:1.9rem;line-height:1.24}
-  .tp-arch{width:12rem}
+  .tp-grid .tp-card{grid-column:span 2!important;width:auto;height:100%;min-height:0;max-height:28vh;
+    padding:2.2vh 1.1rem;gap:1vh}
+  .tp-grid .tp-card:nth-child(4){grid-column:2 / span 2!important}
+  .tp-grid .tp-card:nth-child(5){grid-column:4 / span 2!important;min-height:0;max-height:28vh}
+  .tp-card__title{font-size:1.58rem;line-height:1.24}
+  /* арка сжимается, если заголовок занял три строки */
+  .tp-grid .tp-arch{width:9.4vh;height:10.4vh;flex:0 1 auto;min-height:0}
+  .tp-grid .tp-arch__ico{width:4.6vh;height:4.6vh}
   .tp-langs{gap:3rem}
   .tp-lang{width:16rem;height:12.8rem;border-radius:8rem 8rem 1rem 1rem}
   .tp-lang__code{font-size:3.3rem;padding-top:2.3rem}
@@ -425,6 +429,27 @@ body.tp-mode-inner .tp-bg__veil{
 /* ---- сплэш: только коды языков, без подписи и разделительной линии ---- */
 .tp-lang{justify-content:center;padding-bottom:0;gap:0}
 .tp-lang__code{margin-top:0;padding-top:0}
+
+/* ---- меню: заголовок сверху, карточки прижаты к низу,
+       между ними свободное пространство ---- */
+.tp-menu__body{justify-content:flex-start}
+.tp-menu__body .tp-grid{margin-top:auto}
+
+/* ---- горизонтальный экран: два ряда 3 + 2 умещаются целиком.
+       Размеры от высоты экрана: rem здесь зависит и от ширины,
+       на 2500px+ он скачкообразно растёт. Блок в конце файла —
+       правила .tp-card объявлены ниже медиазапроса выше по тексту ---- */
+@media (orientation:landscape){
+  .tp-menu__body{overflow:hidden;gap:2vh;padding-top:2vh;padding-bottom:1.4vh}
+  .tp-menu__title{font-size:3.4vh}
+  .tp-menu__sub{font-size:1.5vh;margin-top:1vh}
+  .tp-grid{gap:2.4vh 1.6vw}
+  .tp-grid .tp-card{min-height:0;max-height:31vh;padding:1.6vh 1.2rem;gap:.7vh}
+  .tp-grid .tp-arch{width:7.6vh;height:8.4vh;flex:0 1 auto;min-height:0}
+  .tp-grid .tp-arch__ico{width:3.7vh;height:3.7vh}
+  .tp-grid .tp-card__num{font-size:1.5vh}
+  .tp-grid .tp-card__title{font-size:1.95vh;line-height:1.28}
+}
 
 /* ---- разделы в подготовке ---- */
 .tp-card.is-soon{opacity:.62}
