@@ -600,7 +600,15 @@ function slideSound(sec){ if(!SND||!sec) return;
          for(var k=0;k<n;k++) sndTick(k); } }
 
 /* ---------- три языка ---------- */
-var LANG='uz';
+/* язык задаётся на index.html: ?lang=… либо сохранённый выбор */
+function bipReadLang(){
+  var l=null;
+  try{ l=new URLSearchParams(window.location.search).get('lang'); }catch(e){}
+  if(l!=='uz'&&l!=='ru'&&l!=='en'){ l=null; try{ l=window.localStorage.getItem('bipLang'); }catch(e){} }
+  return (l==='uz'||l==='ru'||l==='en') ? l : 'uz';
+}
+function bipSaveLang(l){ try{ window.localStorage.setItem('bipLang',l); }catch(e){} }
+var LANG=bipReadLang();
 function render(){
   var d=TR[LANG];
   sl.forEach(function(sec,x){
@@ -614,10 +622,11 @@ function render(){
     });
   });
   document.documentElement.lang=LANG;
+  [].forEach.call(document.querySelectorAll('#lang button'),function(z){ z.classList.toggle('on', z.dataset.l===LANG); });
 }
 [].forEach.call(document.querySelectorAll('#lang button'),function(b){
   b.addEventListener('click',function(e){e.stopPropagation();sndTap();
-    LANG=b.dataset.l;
+    LANG=b.dataset.l; bipSaveLang(LANG);
     [].forEach.call(document.querySelectorAll('#lang button'),function(z){z.classList.remove('on');});
     b.classList.add('on'); render();});
 });
