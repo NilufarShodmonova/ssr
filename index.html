@@ -422,6 +422,10 @@ body.tp-mode-inner .tp-bg__veil{
 .tp-grid{align-items:stretch}
 .tp-grid .tp-card{height:100%}
 
+/* ---- сплэш: только коды языков, без подписи и разделительной линии ---- */
+.tp-lang{justify-content:center;padding-bottom:0;gap:0}
+.tp-lang__code{margin-top:0;padding-top:0}
+
 /* ---- разделы в подготовке ---- */
 .tp-card.is-soon{opacity:.62}
 .tp-card.is-soon::after{
@@ -466,22 +470,15 @@ body.tp-mode-inner .tp-bg__veil{
   </div>
 
   <div class="tp-splash__bot">
-    <div class="tp-langhint">Tilni tanlang · Выберите язык · Select language</div>
     <div class="tp-langs">
       <button class="tp-lang" data-lang="uz">
         <span class="tp-lang__code">UZ</span>
-        <span class="tp-lang__flagline"></span>
-        <span class="tp-lang__name">O‘ZBEKCHA</span>
       </button>
       <button class="tp-lang" data-lang="ru">
         <span class="tp-lang__code">RU</span>
-        <span class="tp-lang__flagline"></span>
-        <span class="tp-lang__name">RUSSKIY</span>
       </button>
       <button class="tp-lang" data-lang="en">
         <span class="tp-lang__code">EN</span>
-        <span class="tp-lang__flagline"></span>
-        <span class="tp-lang__name">ENGLISH</span>
       </button>
     </div>
   </div>
