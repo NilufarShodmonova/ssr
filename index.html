@@ -433,6 +433,12 @@ body.tp-mode-inner .tp-bg__veil{
 /* ---- меню: заголовок сверху, карточки прижаты к низу,
        между ними свободное пространство ---- */
 .tp-menu__body{justify-content:flex-start}
+/* ---- арки всех карточек на одной линии: арка и цифра прижаты к верху,
+       заголовок занимает остаток высоты и центрируется в нём.
+       Иначе двухстрочный заголовок поднимает арку выше соседних ---- */
+.tp-grid .tp-card{justify-content:flex-start}
+.tp-grid .tp-card__title{flex:1 1 auto;display:flex;align-items:center;justify-content:center}
+
 /* два auto-отступа делят свободное место поровну:
    заголовок оказывается по центру просвета над карточками */
 .tp-menu__body .tp-menu__title{margin-top:auto}
@@ -631,6 +637,7 @@ en:{
     $$('.tp-screen').forEach(function(s){ s.classList.remove('is-active'); });
     $(id).classList.add('is-active');
     document.body.classList.toggle('tp-mode-inner', id !== '#tp-splash');
+    if (id === '#tp-menu') alignIcons();   /* пока экран скрыт, getBBox не работает */
   }
 
   function archSVG(iconKey){
@@ -640,6 +647,20 @@ en:{
       '</svg>' +
       '<svg class="tp-arch__ico" viewBox="0 0 24 24">' + TP_ICONS[iconKey] + '</svg>' +
     '</div>';
+  }
+
+  /* Контуры значков занимают в макете 24x24 разные полосы по вертикали:
+     у звезды рисунок начинается на 3.4, у камеры — на 6.6. Из-за этого
+     одинаково выставленные рамки давали визуально разную высоту значка.
+     Сдвигаем viewBox так, чтобы центр рисунка совпал с центром рамки. */
+  function alignIcons(){
+    $$('.tp-arch__ico').forEach(function(svg){
+      var bb;
+      try { bb = svg.getBBox(); } catch(e) { return; }   /* экран скрыт — выровняем при показе */
+      if (!bb || !bb.height || !bb.width) return;
+      var cx = bb.x + bb.width/2, cy = bb.y + bb.height/2;
+      svg.setAttribute('viewBox', (cx-12) + ' ' + (cy-12) + ' 24 24');
+    });
   }
 
   function renderMenu(){
@@ -669,6 +690,8 @@ en:{
     $$('.tp-pill').forEach(function(p){
       p.classList.toggle('is-on', p.getAttribute('data-lang') === lang);
     });
+
+    alignIcons();
   }
 
   /* --- язык: чтение / сохранение выбора --- */
