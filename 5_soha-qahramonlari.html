@@ -696,5 +696,34 @@ go=function(k){ _go(k); slideSound(sl[i]); };
 render(); go(0);
 })();
 </script>
+
+<script>
+/* ================= киоск: жесты и возврат на заставку =================
+   Экран большой и сенсорный: масштабирование двумя пальцами отключаем,
+   а после 5 минут без действий возвращаемся на титульный экран. */
+(function(){
+  ['contextmenu','gesturestart','gesturechange','gestureend'].forEach(function(ev){
+    document.addEventListener(ev, function(e){ e.preventDefault(); }, {passive:false});
+  });
+  document.addEventListener('dblclick', function(e){ e.preventDefault(); }, {passive:false});
+  document.addEventListener('touchmove', function(e){
+    if (e.touches && e.touches.length > 1) e.preventDefault();   /* щипок */
+  }, {passive:false});
+
+  var IDLE_MS = 300000, timer = null;
+  function fire(){
+    /* идёт воспроизведение — человек смотрит, не выкидываем его */
+    var v = document.querySelector('video');
+    if (v && !v.paused && !v.ended && v.currentTime > 0) { reset(); return; }
+    window.location.href = 'index.html';
+  }
+  function reset(){ clearTimeout(timer); timer = setTimeout(fire, IDLE_MS); }
+  ['pointerdown','touchstart','mousemove','wheel','keydown'].forEach(function(ev){
+    document.addEventListener(ev, reset, {passive:true});
+  });
+  document.addEventListener('play', reset, true);
+  reset();
+})();
+</script>
 </body>
 </html>
