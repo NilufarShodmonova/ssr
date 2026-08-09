@@ -422,6 +422,25 @@ body.light #dots i.on{background:#a97c2c}
    и считаются от padding-box, поэтому укорачиваем сам #deck */
 #deck{bottom:calc(var(--bip-bottom) + var(--bip-home-h,74px)
     + var(--bip-gap) + var(--bip-dots) + var(--bip-clear))}
+
+/* ---- круглые стрелки листания в правом нижнем углу ---- */
+#bip-nav{position:fixed;right:2.2vw;bottom:var(--bip-bottom,3vh);z-index:62;
+  display:flex;gap:1.1rem;align-items:center}
+#bip-nav button{width:var(--bip-home-h,54px);height:var(--bip-home-h,54px);
+  display:grid;place-items:center;padding:0;border-radius:50%;cursor:pointer;
+  border:1.5px solid rgba(212,175,110,.55);
+  background:linear-gradient(135deg,rgba(16,31,56,.82),rgba(7,14,26,.88));
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  box-shadow:0 .8rem 2.4rem rgba(0,0,0,.5);
+  color:#f0d9a8;transition:border-color .3s,background .3s,transform .2s}
+#bip-nav svg{width:45%;height:45%;fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+#bip-nav button:hover{border-color:#e3b25e;
+  background:linear-gradient(135deg,rgba(24,44,78,.9),rgba(10,20,36,.92))}
+#bip-nav button:active{transform:scale(.94)}
+@media (max-aspect-ratio:1/1){
+  #bip-nav{right:5vw;gap:1.4rem}
+}
 </style>
 </head>
 <body>
@@ -611,6 +630,16 @@ var _play=document.getElementById('play');
 if(_play) _play.addEventListener('click',function(e){
   e.stopPropagation(); sndTap(); playing? pause() : resume();
 });
+
+/* круглые стрелки в правом нижнем углу — тот же путь, что у клавиш.
+   Разметка идёт после этого скрипта, поэтому ждём готовности DOM. */
+function bipArrows(){
+  var pv=document.getElementById('bip-prev'), nx=document.getElementById('bip-next');
+  if(pv) pv.addEventListener('click',function(e){ e.stopPropagation(); nav(i-1); });
+  if(nx) nx.addEventListener('click',function(e){ e.stopPropagation(); nav(i+1); });
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bipArrows);
+else bipArrows();
 addEventListener('keydown',function(e){
   if(e.key==='ArrowRight'||e.key==='PageDown'){nav(i+1);}
   if(e.key==='ArrowLeft'||e.key==='PageUp'){nav(i-1);}
@@ -744,5 +773,9 @@ render(); go(0);
   reset();
 })();
 </script>
+<div id="bip-nav">
+  <button id="bip-prev" aria-label="Oldingi"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button id="bip-next" aria-label="Keyingi"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</div>
 </body>
 </html>
